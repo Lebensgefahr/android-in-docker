@@ -1,0 +1,27 @@
+services:
+  android-service:
+    env_file:
+      - .env
+    image: android-emulator
+    build:
+      context: .
+      args:
+        - ANDROID_CMD=$ANDROID_CMD
+        - ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT
+        - EMULATOR_NAME=$EMULATOR_NAME
+        - EMULATOR_DEVICE=$EMULATOR_DEVICE
+        - EMULATOR_PACKAGE=$EMULATOR_PACKAGE
+        - XAUTH=$XAUTH
+        - ANDROID_CMD=$ANDROID_CMD
+        - ANDROID_SDK_PACKAGES=$ANDROID_SDK_PACKAGES
+        - DISPLAY=$DISPLAY
+    container_name: android-emulator
+    privileged: true
+    volumes:
+      - ${XDG_RUNTIME_DIR}/pulse/native:${XDG_RUNTIME_DIR}/pulse/native
+      - ~/.config/pulse/cookie:/root/.config/pulse/cookie
+      - ./android:$ANDROID_SDK_ROOT
+      - ./.android:/root/.android
+      - ./xauth:$XAUTH
+    command: emulator -avd "${EMULATOR_NAME}" -no-boot-anim -gpu off
+    network_mode: host
